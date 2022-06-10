@@ -1,0 +1,41 @@
+version: '3.9'
+
+services:
+    webserver:
+        container_name: webserver
+        build:
+            context: .
+            dockerfile: ./docker/nginx/Dockerfile
+        restart: unless-stopped
+        tty: true
+        ports:
+            - '8000:80'
+        volumes:
+            - ./:/var/www
+
+    app:
+        container_name: app
+        build:
+            context: .
+            dockerfile: ./docker/php/Dockerfile
+        restart: unless-stopped
+        tty: true
+        volumes:
+            - ./:/var/www/
+        depends_on:
+            - webserver
+
+    database:
+        container_name: database
+        image: mysql:8.0.29
+        restart: unless-stopped
+        tty: true
+        environment:
+            MYSQL_DATABASE: ${DB_DATABASE}
+            MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+            MYSQL_USER: ${DB_USERNAME}
+            MYSQL_PASSWORD: ${DB_PASSWORD}
+        ports:
+            - '3306:3306'
+        volumes:
+            - ./docker/mysql/data/:/var/lib/mysql/
