@@ -6,15 +6,14 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Room extends Model
+class Block extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'location_id',
-        'temperature',
+        'room_id',
+        'volume',
         'is_busy',
     ];
 
@@ -28,13 +27,8 @@ class Room extends Model
         return $builder->whereIsBusy(false);
     }
 
-    public function blocks(): HasMany
+    public function room(): BelongsTo
     {
-        return $this->hasMany(Block::class);
-    }
-
-    public function location(): BelongsTo
-    {
-        return $this->belongsTo(Location::class);
+        return $this->belongsTo(Room::class);
     }
 }

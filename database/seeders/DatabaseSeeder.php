@@ -12,6 +12,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             LocationSeeder::class,
             RoomSeeder::class,
+            BlockSeeder::class,
         ]);
     }
 }
