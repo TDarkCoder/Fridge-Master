@@ -27,7 +27,7 @@ class BlockSeeder extends Seeder
             for ($i = 0; $i < random_int(2, 10); $i++) {
                 $blocks[] = [
                     'room_id' => $room->id,
-                    'is_busy' => random_int(0, 1),
+                    'volume' => Block::DEFAULT_VOLUME,
                 ];
             }
         }

@@ -17,6 +17,11 @@ class Location extends Model
 
     public $timestamps = false;
 
+    public function bookings(): HasMany
+    {
+        return $this->hasMany(Booking::class);
+    }
+
     public function rooms(): HasMany
     {
         return $this->hasMany(Room::class);

@@ -11,6 +11,8 @@ class Block extends Model
 {
     use HasFactory;
 
+    public const DEFAULT_VOLUME = 2;
+
     protected $fillable = [
         'room_id',
         'volume',
@@ -19,12 +21,12 @@ class Block extends Model
 
     public function scopeBusy(Builder $builder): Builder
     {
-        return $builder->whereIsBusy(true);
+        return $builder->whereNotNull('booking_id');
     }
 
     public function scopeFree(Builder $builder): Builder
     {
-        return $builder->whereIsBusy(false);
+        return $builder->whereNull('booking_id');
     }
 
     public function room(): BelongsTo
