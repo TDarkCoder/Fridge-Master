@@ -1,0 +1,301 @@
+openapi: 3.0.0
+info:
+  version: '1'
+  title: Fridge Master
+  description: 'API for working with bookings in Fridge Master'
+servers:
+  - url: http://localhost:8000/api
+paths:
+  /my-bookings:
+    get:
+      summary: Fetch bookings of authorized user
+      operationId: getMyBookings
+      tags:
+        - Booking
+      parameters:
+        - name: offset
+          in: query
+          description: Value must be higher than 0 and less than `total`
+          required: false
+          schema:
+            type: integer
+            format: int32
+        - name: limit
+          in: query
+          description: Value must be in the range of 10 and 100
+          required: false
+          schema:
+            type: integer
+            format: int32
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Bookings'
+  /bookings/{bookingId}/key:
+    get:
+      summary: Fetch specific booking key
+      operationId: BookingKey
+      tags:
+        - Booking
+      parameters:
+        - name: bookingId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: string
+  /bookings/{roomId}/calculate:
+    post:
+      summary: Calculate available blocks for booking
+      operationId: calculateBooking
+      tags:
+        - Booking
+      parameters:
+        - name: roomId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: temperature
+          in: query
+          description: Value must be in the range of -2 and 2, but not equal to 0 (in °C)
+          required: true
+          schema:
+            type: number
+            format: float
+        - name: volume
+          in: query
+          description: Value must be more than 0 (in m3)
+          required: true
+          schema:
+            type: number
+            format: float
+        - name: duration
+          in: query
+          description: Value must be in the range of 1 and 24 (in days)
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookingCalculation'
+  /bookings/{roomId}:
+    post:
+      summary: Booking creation
+      operationId: bookingStore
+      tags:
+        - Booking
+      parameters:
+        - name: roomId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: duration
+          in: query
+          description: Value must be in the range of 1 and 24 (in days)
+          required: true
+          schema:
+            type: integer
+            format: int32
+        - name: volume
+          in: query
+          description: Value must be more than 0 (in m3)
+          required: true
+          schema:
+            type: number
+            format: float
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Booking'
+  /locations:
+    get:
+      summary: Fetch all available locations
+      operationId: getLocations
+      tags:
+        - Location
+      parameters:
+        - name: with_rooms
+          in: query
+          description: When `true`, return free rooms quantity
+          required: false
+          schema:
+            type: boolean
+        - name: with_blocks
+          in: query
+          description: When `true`, return free blocks quantity
+          required: false
+          schema:
+            type: boolean
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Locations'
+  /rooms:
+    get:
+      summary: Fetch available rooms
+      operationId: getRooms
+      tags:
+        - Room
+      parameters:
+        - name: location_id
+          in: query
+          description: Value must be ID of existing location
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: temperature
+          in: query
+          description: Value must be in the range of -2 and 2, but not equal to 0 (in °C)
+          required: false
+          schema:
+            type: number
+            format: float
+        - name: with_blocks
+          in: query
+          description: When `true`, return free blocks quantity and available volume
+          required: false
+          schema:
+            type: boolean
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Rooms'
+components:
+  schemas:
+    Booking:
+      required:
+        - id
+        - location_id
+        - room_id
+        - volume
+        - duration
+      properties:
+        id:
+          type: integer
+          format: int64
+        user_id:
+          type: integer
+          format: int64
+        location_id:
+          type: integer
+          format: int64
+        room_id:
+          type: integer
+          format: int64
+        duration:
+          type: integer
+          format: int32
+        volume:
+          type: number
+          format: float
+        status:
+          type: string
+        created_at:
+          type: string
+        update_at:
+          type: string
+    Bookings:
+      properties:
+        data:
+          items:
+            $ref: '#/components/schemas/Booking'
+          type: array
+        total:
+          description: Total amount of items
+          type: integer
+          format: int32
+      type: object
+    BookingCalculation:
+      required:
+        - available_blocks
+        - available_volume
+      properties:
+        available_blocks:
+          type: integer
+          format: int32
+        available_volume:
+          type: number
+          format: float
+        invoice:
+          type: number
+          format: float
+    Location:
+      required:
+        - id
+        - name
+        - timezone
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        timezone:
+          type: string
+        rooms_count:
+          type: integer
+          format: int32
+        blocks_count:
+          type: integer
+          format: int32
+    Locations:
+      type: array
+      items:
+        $ref: '#/components/schemas/Location'
+    Room:
+      required:
+        - id
+        - location_id
+        - temperature
+        - is_busy
+      properties:
+        id:
+          type: integer
+          format: int64
+        location_id:
+          type: integer
+          format: int64
+        temperature:
+          type: number
+          format: float
+        is_busy:
+          type: boolean
+        blocks_count:
+          type: integer
+          format: int32
+        available_volume:
+          type: number
+          format: float
+    Rooms:
+      type: array
+      items:
+        $ref: '#/components/schemas/Room'

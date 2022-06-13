@@ -24,6 +24,20 @@
         <div id="swagger-ui"></div>
 
         <script type="text/javascript" src="{{ asset('swagger/js/swagger-ui-bundle.js') }}"></script>
-        <script type="text/javascript" src="{{ asset('swagger/js/swagger-ui-standalone-preset.js') }}"></script>
+        <script type="text/javascript">
+            window.onload = () => {
+                window.ui = SwaggerUIBundle({
+                    url: '{{ config('app.url') }}/swagger/specification.yml',
+                    dom_id: '#swagger-ui',
+                    deepLinking: true,
+                    presets: [
+                        SwaggerUIBundle.presets.apis,
+                    ],
+                    plugins: [
+                        SwaggerUIBundle.plugins.DownloadUrl,
+                    ],
+                });
+            }
+        </script>
     </body>
 </html>
