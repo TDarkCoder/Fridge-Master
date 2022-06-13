@@ -31,6 +31,12 @@ return new class extends Migration {
             $table->float('volume')->comment('in m3');
             $table->integer('duration')->comment('in days');
             $table->float('invoice')->nullable();
+            $table->enum('status', [
+                'pending',
+                'cancelled',
+                'active',
+                'completed',
+            ])->default('pending');
             $table->timestamps();
         });
 

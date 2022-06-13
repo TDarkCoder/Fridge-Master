@@ -19,6 +19,7 @@ class Booking extends Model
         'volume',
         'duration',
         'invoice',
+        'status',
     ];
 
     protected $hidden = [
