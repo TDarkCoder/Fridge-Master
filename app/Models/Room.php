@@ -18,6 +18,8 @@ class Room extends Model
         'is_busy',
     ];
 
+    public $timestamps = false;
+
     public function scopeBusy(Builder $builder): Builder
     {
         return $builder->whereIsBusy(true);
