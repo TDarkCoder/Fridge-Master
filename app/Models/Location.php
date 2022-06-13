@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 
 class Location extends Model
 {
@@ -16,6 +17,11 @@ class Location extends Model
     ];
 
     public $timestamps = false;
+
+    public function blocks(): HasManyThrough
+    {
+        return $this->hasManyThrough(Block::class, Room::class);
+    }
 
     public function bookings(): HasMany
     {
