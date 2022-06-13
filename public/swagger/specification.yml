@@ -15,14 +15,14 @@ paths:
       parameters:
         - name: offset
           in: query
-          description: Value must be higher than 0 and less than `total`
+          description: Value must be higher than 0 and less than `total` (for pagination)
           required: false
           schema:
             type: integer
             format: int32
         - name: limit
           in: query
-          description: Value must be in the range of 10 and 100
+          description: Value must be in the range of 10 and 100 (for pagination)
           required: false
           schema:
             type: integer
@@ -36,7 +36,7 @@ paths:
                 $ref: '#/components/schemas/Bookings'
   /bookings/{bookingId}/key:
     get:
-      summary: Fetch specific booking key
+      summary: Fetch key of certain booking
       operationId: BookingKey
       tags:
         - Booking
@@ -76,7 +76,7 @@ paths:
             format: float
         - name: volume
           in: query
-          description: Value must be more than 0 (in m3)
+          description: Value must be more than 0 (in m^3)
           required: true
           schema:
             type: number
@@ -117,7 +117,7 @@ paths:
             format: int32
         - name: volume
           in: query
-          description: Value must be more than 0 (in m3)
+          description: Value must be more than 0 (in m^3)
           required: true
           schema:
             type: number
@@ -138,13 +138,13 @@ paths:
       parameters:
         - name: with_rooms
           in: query
-          description: When `true`, return free rooms quantity
+          description: When value is `true`, free rooms quantity is included in response
           required: false
           schema:
             type: boolean
         - name: with_blocks
           in: query
-          description: When `true`, return free blocks quantity
+          description: When value is `true`, free blocks quantity is included in response
           required: false
           schema:
             type: boolean
@@ -178,7 +178,7 @@ paths:
             format: float
         - name: with_blocks
           in: query
-          description: When `true`, return free blocks quantity and available volume
+          description: When value is `true`, free blocks quantity and available volume are included in response
           required: false
           schema:
             type: boolean

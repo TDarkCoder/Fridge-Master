@@ -25,8 +25,8 @@ class SaveRequest extends FormRequest
             ->sum('volume');
 
         return [
-            'duration' => 'required|numeric|lte:'.Booking::DURATION_MAX,
-            'volume' => 'required|numeric|lte:'.$availableBlocksVolume,
+            'duration' => 'required|numeric|gte:1|lte:'.Booking::DURATION_MAX,
+            'volume' => 'required|numeric|gte:1|lte:'.$availableBlocksVolume,
         ];
     }
 }

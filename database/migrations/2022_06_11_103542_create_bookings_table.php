@@ -40,7 +40,7 @@ return new class extends Migration {
             $table->timestamps();
         });
 
-        Schema::table('blocks', static function(Blueprint $table): void {
+        Schema::table('blocks', static function (Blueprint $table): void {
             $table->dropColumn('is_busy');
             $table
                 ->foreignId('booking_id')
@@ -53,7 +53,7 @@ return new class extends Migration {
 
     public function down(): void
     {
-        Schema::table('blocks', static function(Blueprint $table): void {
+        Schema::table('blocks', static function (Blueprint $table): void {
             $table->boolean('is_busy')->default(false);
             $table->dropForeign(['booking_id']);
             $table->dropColumn('booking_id');
